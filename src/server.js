@@ -43,6 +43,9 @@ app.get("/profile", (req, res) => {
 // Logout route
 app.post("/logout", (req, res) => {
   // Write your code here
+  if(!req.session.user){
+    return res.status(401).json({message: "Unauthorized"})
+  }
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ message: "Logout failed" });
@@ -62,3 +65,4 @@ if (process.env.NODE_ENV !== "test") {
 
 export default app;
 
+3
