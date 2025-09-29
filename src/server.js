@@ -4,7 +4,11 @@ import session from "express-session";
 const app = express();
 app.use(express.json());
 
-// Setup session middleware
+// let session = require('express-session')
+
+
+
+
 app.use(
   session({
     secret: "mysecretkey", // normally from env
@@ -16,21 +20,38 @@ app.use(
 
 // Login route
 app.post("/login", (req, res) => {
-  // Write your code here
+  if (req.body.username === "admin" && req.body.password === "secret") {
+    req.session.user = { username: req.body.username };
+    res.status(200).json( { message: "Login successful" });
+  } else {
+    res.status(401).json( { message: "Invalid credentials" });
+  }
 
 });
 
 // Profile route (protected)
 app.get("/profile", (req, res) => {
-  // Write your code here
+  if (req.session.user) {
+    res.status(200).json({ message: `Welcome, ${req.session.user.username}` });
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
+  }
 
 });
 
 // Logout route
-app.get("/logout", (req, res) => {
-  // Write your code here
-
+app.post("/logout", (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed" });
+    }
+    res.clearCookie("connect.sid");
+    res.status(200).json({ message: "Logout successful" });
+  });
 });
+
+
+
 
 // Start server only if not in test mode
 if (process.env.NODE_ENV !== "test") {
