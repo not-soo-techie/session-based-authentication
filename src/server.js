@@ -15,20 +15,39 @@ app.use(
 );
 
 // Login route
+// POST /login
+
 app.post("/login", (req, res) => {
-  // Write your code here
+  const { username, password } = req.body;
+  if (username === 'admin' && password === 'secret') {
+    req.session.user = { username: 'admin' };
+    res.status(200).json({ message: "Login successful" })
+  }
+  else {
+    res.status(401).json({ message: "Invalid credentials" })
+  }
 
 });
 
 // Profile route (protected)
 app.get("/profile", (req, res) => {
-  // Write your code here
+  if (req.session.user) {
+    res.status(200).json({ message: "Welcome, admin", user: req.session.user })
+  } else {
+    res.status(401).json({ message: "Unauthorized" })
+  }
 
 });
 
 // Logout route
-app.get("/logout", (req, res) => {
-  // Write your code here
+
+app.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Could not log out" })
+    }
+    res.status(200).json({ message: "Logout successful" })
+  })
 
 });
 
