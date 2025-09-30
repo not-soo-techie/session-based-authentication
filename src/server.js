@@ -29,9 +29,9 @@ app.post("/login", (req, res) => {
 // Profile route (protected)
 app.get("/profile", (req, res) => {
   if (!req.session.user) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json( { message: "Unauthorized" });
   }
-  res.json({ message: "Profile data", user: req.session.user });
+  res.json({ message: 'Welcome, admin'});
 });
 
 // Logout route
