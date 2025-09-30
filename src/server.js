@@ -14,6 +14,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("kjnflw")
+})
+
 // Login route
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -35,8 +39,8 @@ app.get("/profile", (req, res) => {
 });
 
 // Logout route
-app.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
+app.post("/logout", async(req, res) => {
+  await req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ message: "Logout failed" });
     }
@@ -46,10 +50,11 @@ app.post("/logout", (req, res) => {
 });
 
 // Start server only if not in test mode
-if (process.env.NODE_ENV !== "test") {
-  app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
+// if (process.env.NODE_ENV !== "test") {
+  app.listen(3004, () => {
+    console.log("Server running on http://localhost:3001");
   });
-}
+// }
 
 export default app;
+
